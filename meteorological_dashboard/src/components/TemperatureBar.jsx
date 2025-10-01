@@ -4,52 +4,37 @@ import { Bar } from 'react-chartjs-2';
 ChartJS.register(CategoryScale, LinearScale, BarElement);
 
 const TemperatureBar = ({ minTemp, maxTemp, currentTemp }) => {
-  const chartData = {
-    labels: [''],
-    datasets: [
-      {
-        data: [minTemp],
-        backgroundColor: '#6495edcc',
-      },
-      {
-        data: [currentTemp - minTemp],
-        backgroundColor: '#ffa500cc',
-      },
-      {
-        data: [maxTemp - currentTemp],
-        backgroundColor: '#dc143ccc',
-      }
-    ]
-  };
+  if (!minTemp || !maxTemp || !currentTemp) 
+    return <p className="text-[#acb0b9] font-semibold">Cargando...</p>;
 
-  const chartOptions = {
-    indexAxis: 'y',
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false // Oculta la leyenda
-      },
-      tooltip: {
-        enabled: false // Desactiva los tooltips
-      }
-    },
-    scales: {
-      x: {
-        stacked: true,
-        display: false,
-      },
-      y: {
-        stacked: true,
-        display: false,
-      }
-    }
+  const currentPos = ((currentTemp - minTemp) / (maxTemp - minTemp)) * 100;
+
+  // Crear gradiente con CSS
+  const gradientStyle = {
+    background: `linear-gradient(90deg, 
+      rgba(100, 149, 237, 0.6) 0%, 
+      rgba(100, 149, 237, 0.6) ${currentPos}%, 
+      rgba(220, 20, 60, 0.6) ${currentPos}%, 
+      rgba(220, 20, 60, 0.6) 100%)`,
+    borderRadius: '10px',
+    height: '100%',
+    width: '100%'
   };
 
   return (
-    <div className="h-8 w-full border">
-      <Bar data={chartData} options={chartOptions} />
-    </div>
+      <div className="h-4 w-full relative">
+        {/* Barra de temperatura personalizada */}
+        <div style={gradientStyle} />
+        
+        <div 
+          className="absolute top-0 h-full w-1 bg-white border border-black border-opacity-30 z-10"
+          style={{ 
+            left: `${currentPos}%`,
+            transform: 'translateX(-50%)'
+          }}
+        />
+      </div>
+    
   );
 };
 
