@@ -1,3 +1,17 @@
+/**
+ * useWeatherData hook - Centralized weather data management with geolocation fallback
+ * Fetches weather information from OpenWeatherMap API based on searched city or user location
+ * Handles loading states, errors, and data caching with priority for manual searches
+ * 
+ * @param {string|null} searchedCity - City name to search for, null triggers geolocation fallback
+ * @returns {Object} Weather data state and status information
+ * @returns {Object|null} returns.weather - Complete weather data object from API
+ * @returns {string|null} returns.weatherError - Error message from weather API request
+ * @returns {boolean} returns.weatherLoading - Loading state specific to weather data fetch
+ * @returns {boolean} returns.isLoading - Combined loading state (geolocation OR weather data)
+ * @returns {string|null} returns.error - Combined error state (geolocation OR weather data)
+ */
+
 import { useState, useEffect } from "react";
 import { useGeolocation } from "./useGeolocation";
 
@@ -8,18 +22,15 @@ function useWeatherData(searchedCity) {
   const [weatherError, setWeatherError] = useState(null);
 
   useEffect(() => {
-    const API_KEY = 'ac709c6280eabf659733dcd5928c0456';
+    const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
     let url;
 
     if (searchedCity) {
-      // ✅ URL CORRECTA para obtener el clima por nombre de ciudad
-      url = `https://api.openweathermap.org/data/2.5/weather?q=${searchedCity}&appid=${API_KEY}&units=metric&lang=es`;
+      url = `https://api.openweathermap.org/data/2.5/weather?q=${searchedCity}&appid=${API_KEY}&units=metric`;
     } else if (!geolocation.isLoading && geolocation.position) {
-      // Usar geolocalización
       const [lat, lon] = geolocation.position;
-      url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=es`;
+      url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
     } else {
-      // No hay ciudad buscada ni ubicación lista
       return;
     }
 
@@ -39,7 +50,7 @@ function useWeatherData(searchedCity) {
     };
 
     fetchWeather();
-  }, [geolocation.isLoading, geolocation.position, searchedCity]); // ✅ searchedCity ahora es una dependencia
+  }, [geolocation.isLoading, geolocation.position, searchedCity]); 
 
   return {
     weather,

@@ -1,3 +1,15 @@
+/**
+ * useGeolocation hook - Provides browser geolocation capabilities with state management
+ * Handles location fetching, error states, and loading status for user's current position
+ * Uses the Navigator Geolocation API with optimized accuracy settings
+ * 
+ * @returns {Object} Geolocation state object
+ * @returns {Array<number>|null} returns.position - Array containing [latitude, longitude] as fixed decimals, null if not available
+ * @returns {string|Error|null} returns.error - Error message if geolocation failed, null if successful
+ * @returns {boolean} returns.isLoading - Loading state indicating if geolocation request is in progress
+ */
+
+
 import { useState, useEffect } from "react";
 
 function useGeolocation() {
@@ -12,6 +24,11 @@ function useGeolocation() {
       return;
     }
 
+    /**
+     * Request current position with optimized settings for weather applications
+     * @param {Position} position - Success callback with position data
+     * @param {PositionError} err - Error callback with failure details
+     */
     navigator.geolocation.getCurrentPosition(
       (position) => {
         let lat = position.coords.latitude;

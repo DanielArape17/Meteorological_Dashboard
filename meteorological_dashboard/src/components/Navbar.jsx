@@ -1,37 +1,29 @@
-import { useGeolocation } from "../hooks/useGeolocation";
-import { useRef } from 'react';
+/**
+ * Navbar component - Main navigation bar with app title, search functionality, and external links
+ * Serves as the primary navigation interface for the weather application
+ * 
+ * @param {Object} props - Component properties
+ * @param {Function} props.onCitySearch - Callback function triggered when a city search is performed
+ * @returns {JSX.Element} - Rendered navigation bar with search and external links
+*/
+
+import { SearchBar } from "./SearchBar";
+import { FaGithub } from "react-icons/fa";
 
 function Navbar({ onCitySearch }) {
-  const geolocation = useGeolocation();
-  const input = useRef(null);
-
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter' && input.current.value) {
-      // 🔥 Llama a la función pasada desde App con el valor de la ciudad
-      onCitySearch(input.current.value);
-      input.current.value = ''; // Opcional: limpiar el input
-    }
-  };
-
   return (
-    <nav className="flex justify-between items-center ">
-      <p className="font-bold text-2xl text-white">Weather</p>
-      <div className="flex-1 max-w-md">
-        <input
-          ref={input}
-          onKeyDown={handleKeyDown}
-          type="text"
-          placeholder="Search location..."
-          className="flex py-1 px-3 text-white bg-[#2e313880] border border-[#3a3e45] rounded-md w-full placeholder:text-[#acb0b9]"
-        />
-      </div>
-      <p className="font-semibold text-lg text-white">
-        {geolocation.isLoading ? "Cargando..." :
-        geolocation.error ? "Error en ubicación" :
-        `${geolocation.position[0]} and ${geolocation.position[1]}`}
-      </p>
+    <nav className="flex justify-between items-center relative">
+      {/* Título */}
+      <p className="font-bold text-2xl text-white pr-6">Weather</p>
+      
+      {/* Componente SearchBar independiente */}
+      <SearchBar onCitySearch={onCitySearch} />
+
+    <a href="https://github.com/DanielArape17" target="_blank" className="pl-6">
+      <FaGithub color="white" size={32}/>
+    </a>
     </nav>
-  )
+  );
 }
 
-export { Navbar }
+export { Navbar };

@@ -1,3 +1,15 @@
+/**
+ * Circular progress component using Doughnut chart from Chart.js
+ * Displays a value as a circular progress indicator with centered text
+ * 
+ * @param {Object} props - Component properties
+ * @param {number} props.value - Current value to display (0 to max)
+ * @param {string} props.unit - Unit symbol to display after value (e.g., "%", "°C")
+ * @param {string} props.color - CSS color for the progress segment
+ * @param {number} [props.max=100] - Maximum value (default: 100)
+ * @returns {JSX.Element} - Rendered circular progress component
+ */
+
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 
